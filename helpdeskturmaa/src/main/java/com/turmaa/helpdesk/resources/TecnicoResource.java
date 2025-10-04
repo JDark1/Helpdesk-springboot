@@ -7,7 +7,15 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.turmaa.helpdesk.domain.Tecnico;
@@ -33,6 +41,7 @@ public class TecnicoResource {
 		return ResponseEntity.ok().body(list);
 	}
 
+	@PreAuthorize("hasAnyRoli{'ADMIN','TECNICO'}")
 	@PostMapping
 	public ResponseEntity<TecnicoDTO> create(@Valid @RequestBody TecnicoDTO objDto) {
 		Tecnico newObj = service.create(objDto);
@@ -40,13 +49,15 @@ public class TecnicoResource {
 				.buildAndExpand(newObj.getId()).toUri();
 		return ResponseEntity.created(uri).body(new TecnicoDTO(newObj));
 	}
-
+	
+	@PreAuthorize("hasAnyRoli{'ADMIN'}")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<TecnicoDTO> update(@PathVariable Integer id, @Valid @RequestBody TecnicoDTO objDto) {
 		Tecnico updatedObj = service.update(id, objDto);
 		return ResponseEntity.ok().body(new TecnicoDTO(updatedObj));
 	}
 
+	@PreAuthorize("hasAnyRoli{'ADMIN'}")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);

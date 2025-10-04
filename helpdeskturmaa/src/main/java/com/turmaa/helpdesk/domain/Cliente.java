@@ -40,6 +40,7 @@ public class Cliente extends Pessoa {
         this.nome = dto.getNome();
         this.cpf = dto.getCpf();
         this.email = dto.getEmail();
+        this.senha = dto.getSenha();
 
     }
 }
