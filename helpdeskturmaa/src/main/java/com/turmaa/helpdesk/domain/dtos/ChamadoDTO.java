@@ -54,7 +54,9 @@ public class ChamadoDTO implements Serializable {
 		this.status = obj.getStatus();
 		this.tecnico = obj.getTecnico().getId();
 		this.cliente = obj.getCliente().getId();
-	}
+		this.nomeTecnico = obj.getTecnico().getNome();
+		this.nomeCliente = obj.getCliente().getNome();	
+		}
 
 	// Getters e Setters
 	public Integer getId() {

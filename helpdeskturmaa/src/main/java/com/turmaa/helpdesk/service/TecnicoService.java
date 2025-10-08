@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.turmaa.helpdesk.domain.Tecnico;
 import com.turmaa.helpdesk.domain.dtos.TecnicoDTO;
+import com.turmaa.helpdesk.repositories.PessoaRepository;
 import com.turmaa.helpdesk.repositories.TecnicoRepository;
 import com.turmaa.helpdesk.service.exceptions.DataIntegrityViolationException;
 import com.turmaa.helpdesk.service.exceptions.ObjectNotFoundException;
@@ -19,6 +20,9 @@ public class TecnicoService {
 
 	@Autowired
 	private TecnicoRepository repository;
+	
+	@Autowired
+	private PessoaRepository pessoaRepository;
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
@@ -35,13 +39,16 @@ public class TecnicoService {
 	}
 
 	public Tecnico create(TecnicoDTO objDto) {
-		if (repository.findByCpf(objDto.getCpf()).isPresent()) {
+		if (pessoaRepository.findByCpf(objDto.getCpf()).isPresent()) {
 			throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");
+		}
+		
+		if (pessoaRepository.findByEmail(objDto.getEmail()).isPresent()) {
+		    throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
 		}
 		
 		Tecnico tecnico = new Tecnico(objDto);
 
-	    // Criptografa a senha antes de salvar
 	    tecnico.setSenha(encoder.encode(objDto.getSenha()));
 	    
 		return repository.save(new Tecnico(objDto));
@@ -50,8 +57,12 @@ public class TecnicoService {
 	public Tecnico update(Integer id, TecnicoDTO objDto) {
 		Tecnico oldObj = findById(id);
 
-		if (!oldObj.getCpf().equals(objDto.getCpf()) && repository.findByCpf(objDto.getCpf()).isPresent()) {
+		if (!oldObj.getCpf().equals(objDto.getCpf()) && pessoaRepository.findByCpf(objDto.getCpf()).isPresent()) {
 			throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");
+		}
+		
+		if (!oldObj.getEmail().equals(objDto.getEmail()) && pessoaRepository.findByEmail(objDto.getEmail()).isPresent()) {
+		    throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
 		}
 
 		oldObj.setNome(objDto.getNome());

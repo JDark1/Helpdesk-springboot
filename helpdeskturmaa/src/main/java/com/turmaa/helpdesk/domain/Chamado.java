@@ -71,8 +71,8 @@ import com.turmaa.helpdesk.domain.enums.Status;
 		    this.id = dto.getId();
 		    this.titulo = dto.getTitulo();
 		    this.observacoes = dto.getObservacoes();
-		    this.prioridade = dto.getPrioridade().getCodigo(); // ou dto.getPrioridade() direto, depende do tipo
-		    this.status = dto.getStatus().getCodigo();         // idem acima
+		    this.prioridade = dto.getPrioridade().getCodigo(); 
+		    this.status = dto.getStatus().getCodigo();         
 		    this.tecnico = tecnico;
 		    this.cliente = cliente;
 		}

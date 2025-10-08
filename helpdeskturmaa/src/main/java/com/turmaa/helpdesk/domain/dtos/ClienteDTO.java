@@ -35,7 +35,6 @@ public class ClienteDTO implements Serializable {
 		this.senha = obj.getSenha();
 	}
 
-	// Getters e Setters
 	public Integer getId() {
 		return id;
 	}

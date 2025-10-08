@@ -6,10 +6,6 @@ import javax.validation.constraints.NotNull;
 
 import com.turmaa.helpdesk.domain.Tecnico;
 
-/**
- * DTO usado para transferir dados da entidade Tecnico
- * sem expor diretamente o objeto de domínio.
- */
 public class TecnicoDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +28,6 @@ public class TecnicoDTO implements Serializable {
 		super();
 	}
 
-	// Construtor que recebe a entidade Tecnico e converte para DTO
 	public TecnicoDTO(Tecnico obj) {
 		this.id = obj.getId();
 		this.nome = obj.getNome();
@@ -41,7 +36,6 @@ public class TecnicoDTO implements Serializable {
 		this.senha = obj.getSenha();
 	}
 
-	// Getters e Setters
 	public Integer getId() {
 		return id;
 	}
