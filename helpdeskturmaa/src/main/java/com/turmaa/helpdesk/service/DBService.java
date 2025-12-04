@@ -29,10 +29,10 @@ public class DBService {
 	private BCryptPasswordEncoder encoder;
 	
     public void instanciaDB(){
-		Tecnico tec1 = new Tecnico(null, "Bill Gates", "76045777093", "bill@mail.com", encoder.encode("123"));
+		Tecnico tec1 = new Tecnico(null, "Bill Gates", "76045777093", "bill@gmail.com", encoder.encode("123"));
 		tec1.addPerfil(Perfil.ADMIN);
         
-		Cliente cli1 = new Cliente(null, "Linus Torvalds", "70511744013", "linus@mail.com", encoder.encode("123"));
+		Cliente cli1 = new Cliente(null, "Linus Torvalds", "70511744013", "linus@gmail.com", encoder.encode("123"));
 		cli1.addPerfil(Perfil.CLIENTE);
 		
 		Chamado cha1 = new Chamado(null, Prioridade.MEDIA, Status.ANDAMENTO, "Chamado 01", "Primeiro chamado", tec1, cli1);

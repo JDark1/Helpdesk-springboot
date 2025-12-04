@@ -6,13 +6,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.turmaa.helpdesk.service.exceptions.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.turmaa.helpdesk.domain.Tecnico;
 import com.turmaa.helpdesk.domain.dtos.TecnicoDTO;
 import com.turmaa.helpdesk.repositories.PessoaRepository;
 import com.turmaa.helpdesk.repositories.TecnicoRepository;
-import com.turmaa.helpdesk.service.exceptions.DataIntegrityViolationException;
 import com.turmaa.helpdesk.service.exceptions.ObjectNotFoundException;
 
 @Service
@@ -23,13 +24,16 @@ public class TecnicoService {
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
 	public Tecnico findById(Integer id) {
+		
 		Optional<Tecnico> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Técnico não encontrado! id: " + id));
+			
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! id: "+ id));
+		
 	}
 
 	public List<TecnicoDTO> findAll() {
@@ -42,16 +46,13 @@ public class TecnicoService {
 		if (pessoaRepository.findByCpf(objDto.getCpf()).isPresent()) {
 			throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");
 		}
-		
 		if (pessoaRepository.findByEmail(objDto.getEmail()).isPresent()) {
 		    throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
 		}
-		
-		Tecnico tecnico = new Tecnico(objDto);
 
-	    tecnico.setSenha(encoder.encode(objDto.getSenha()));
-	    
-		return repository.save(new Tecnico(objDto));
+		objDto.setSenha(encoder.encode(objDto.getSenha()));
+		Tecnico novoTecnico = new Tecnico(objDto);
+		return repository.save(novoTecnico);
 	}
 
 	public Tecnico update(Integer id, TecnicoDTO objDto) {
@@ -62,7 +63,7 @@ public class TecnicoService {
 		}
 		
 		if (!oldObj.getEmail().equals(objDto.getEmail()) && pessoaRepository.findByEmail(objDto.getEmail()).isPresent()) {
-		    throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
+			    throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
 		}
 
 		oldObj.setNome(objDto.getNome());
@@ -76,4 +77,5 @@ public class TecnicoService {
 		Tecnico obj = findById(id);
 		repository.delete(obj);
 	}
+
 }

@@ -1,9 +1,13 @@
 package com.turmaa.helpdesk.domain.dtos;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.turmaa.helpdesk.domain.Cliente;
@@ -12,7 +16,7 @@ public class ClienteDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-
+	
 	@NotNull(message = "O campo NOME é obrigatório")
 	private String nome;
 
@@ -25,6 +29,12 @@ public class ClienteDTO implements Serializable {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotNull(message = "O campo SENHA é obrigatório")
 	private String senha;
+	
+	private Set<String> perfis = new HashSet<>();
+	
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private String dataCriacao;
+
 
 	public ClienteDTO() {
 		super();
@@ -36,8 +46,13 @@ public class ClienteDTO implements Serializable {
 		this.cpf = obj.getCpf();
 		this.email = obj.getEmail();
 		this.senha = obj.getSenha();
+		this.dataCriacao = obj.getDataCriacao().toString();
+		this.perfis = obj.getPerfis().stream()
+				.map(x -> x.getDescricao().replace("ROLE_", "")) // <--- ALTERAÇÃO AQUI
+				.collect(Collectors.toSet());
 	}
 
+	// Getters e Setters
 	public Integer getId() {
 		return id;
 	}
@@ -69,12 +84,28 @@ public class ClienteDTO implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
+	
 	public String getSenha() {
-		return senha;
+	    return senha;
 	}
 
 	public void setSenha(String senha) {
-		this.senha = senha;
+	    this.senha = senha;
+	}
+	
+	public Set<String> getPerfis() {
+	    return perfis;
+	}
+
+	public void setPerfis(Set<String> perfis) {
+	    this.perfis = perfis;
+	}
+	
+	public String getDataCriacao() {
+	    return dataCriacao;
+	}
+
+	public void setDataCriacao(String dataCriacao) {
+	    this.dataCriacao = dataCriacao;
 	}
 }

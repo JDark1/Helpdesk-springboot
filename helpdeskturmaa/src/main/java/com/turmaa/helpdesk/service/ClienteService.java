@@ -23,7 +23,7 @@ public class ClienteService {
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
@@ -46,13 +46,12 @@ public class ClienteService {
 		if (pessoaRepository.findByEmail(objDto.getEmail()).isPresent()) {
 		    throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
 		}
-		
-		Cliente cliente = new Cliente(objDto);
 
-	   
-		cliente.setSenha(encoder.encode(objDto.getSenha()));
-	    
-		return repository.save(new Cliente(objDto));
+		objDto.setSenha(encoder.encode(objDto.getSenha()));
+		
+		Cliente novoCliente = new Cliente(objDto);
+		
+		return repository.save(novoCliente);
 	}
 
 	public Cliente update(Integer id, ClienteDTO objDto) {
@@ -61,9 +60,9 @@ public class ClienteService {
 		if (!oldObj.getCpf().equals(objDto.getCpf()) && pessoaRepository.findByCpf(objDto.getCpf()).isPresent()) {
 			throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");
 		}
-		
+
 		if (!oldObj.getEmail().equals(objDto.getEmail()) && pessoaRepository.findByEmail(objDto.getEmail()).isPresent()) {
-		    throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
+			    throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
 		}
 
 		oldObj.setNome(objDto.getNome());
